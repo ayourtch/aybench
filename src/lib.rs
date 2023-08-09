@@ -37,3 +37,16 @@ fn rdtscp() -> u64 {
     let counter: u64 = (edx as u64) << 32 | eax as u64;
     counter
 }
+
+
+#[no_mangle]
+fn bench<F>(f: F) -> u64
+where
+    F: Fn(),
+{
+    let pre = rdtscp(); // unsafe { core::arch::x86_64::_rdtsc() };
+    f();
+    let post = rdtscp(); // unsafe { core::arch::x86_64::_rdtsc() };
+    post - pre
+}
+
